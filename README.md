@@ -19,13 +19,13 @@ Fifth, Waiters should be notified by the system for the tables occupied for too 
 Lastly, The system should also allow the changes in the number and the sizes of tables due to the seasonal changes of the customer base.   
 
 Assumption
-- 1Default number of tables:15
--Default distribution of size of tables: 6 seat table:3
+- 1 Default number of tables:15
+- Default distribution of size of tables: 6 seat table:3
  			            4 seat table:6
             2 seat table:4
             1 seat table:2	
--no table are reserved
--normal occupied time: 1.5 hours
--“too long” occupied time: 2 hours
+- no table are reserved
+- normal occupied time: 1.5 hours
+- “too long” occupied time: 2 hours
 
 
