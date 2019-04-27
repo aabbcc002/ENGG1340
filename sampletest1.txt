@@ -11,8 +11,10 @@ Input:
 5
 2
 4
+0
 
 Expected final output/the output.txt: (the sit-in time is accorfing to the clock on the computer)
+
 
  No. Size Numppl Occupied  Sit-in time Meal time(min)  Overtime
    0    2      2        1        23:31        0        No
