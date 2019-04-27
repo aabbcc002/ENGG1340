@@ -1,0 +1,31 @@
+SampleTestcase_2
+
+Input:
+
+6
+2 2
+4 2
+6 2
+4
+6
+6
+6
+2
+2
+1
+-1
+2
+
+Expected final output/the output.txt: (the sit-in time is accorfing to the clock on the computer)
+
+Customers moved out
+
+ No. Size Numppl Occupied  Sit-in time Meal time(min)  Overtime
+   0    2      1        1        23:40        0        No
+   1    2      2        1        23:40        0        No
+   2    4      0        0        00:00        0        No
+   3    4      2        1        23:40        0        No
+   4    6      6        1        23:40        0        No
+   5    6      6        1        23:40        0        No
+
+Top 10 waiting list:6 0 0 0 0 0 0 0 0 0
