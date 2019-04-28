@@ -30,7 +30,7 @@ void move_list(int list[],int j){
 the input data is the table number and the struct of table.
 */
 //All the time of the Sit-in time is according to the clock on the local computer
-void timechange(int select, struct table tabledis[])
+void timechange(int select,  struct table *tabledis)
 {
     string s_startime,stime;
     auto startime = chrono::system_clock::to_time_t(chrono::system_clock::now());
@@ -49,7 +49,7 @@ customers behind them will not have a table at a long time.
   For experiment condition, to make the result of overtime more easy to be
 discovered, the highest minutes of customers to sit in the table
 will be 3 mins as shown bellow "if(difference<=3)". */
-void timecompare(string a, struct table tabledis[], int select){
+void timecompare(string a, struct table *tabledis, int select){
   string stime = a.substr(0,2)+a.substr(3,2);
   int time_i=stoi(stime);
   auto nowtime = chrono::system_clock::to_time_t(chrono::system_clock::now());
@@ -69,9 +69,10 @@ void timecompare(string a, struct table tabledis[], int select){
 /*This function is reading the total number of table in order to set the
 number of different types of table.
   Then an initial template of all of the condition of table will be set. */
-void readtable(int number_of_table,struct table tabledis[]){
+table* readtable(int number_of_table, struct table *tabledis){
   string line;
   int counter=0,size,number,sum=0;
+  table* array = new table [number_of_table];
   while(number_of_table>counter){
     cout<<"Please input the size of table and its amount:";
     cin>>size>>number;
@@ -82,10 +83,11 @@ void readtable(int number_of_table,struct table tabledis[]){
       continue;
     }
     for(int i=0;i<number;i++){
-      tabledis[counter]={counter,size,0,false,"00:00",0,"No"};
+      array[counter]={counter,size,0,false,"00:00",0,"No"};
       counter+=1;
     }
   }
+  return array;
 }
 
 void pending(int size_of_group,int pending_list[]){
@@ -97,7 +99,7 @@ void pending(int size_of_group,int pending_list[]){
 }
 
 // this function is initiating the template of waiting list of customers
-void pending_checking(int pending_list[],struct table tabledis[],int totaltable,int max,int max2){
+void pending_checking(int pending_list[], struct table *tabledis,int totaltable,int max,int max2){
   int i=0,count=0,min,difference,selected,count2,count3;
   min=max;
   //to see are there any customer size among the first 5 pending customers larger than then second largest table size
@@ -185,7 +187,6 @@ void pending_checking(int pending_list[],struct table tabledis[],int totaltable,
       }
 //all table are full
       if(count2==0){
-        cout<<"\n"<<"all full"<<endl;
         min=max;
         for(int j=0;j<totaltable;j++){
           if((tabledis[j].tsize-tabledis[j].numppl)>=pending_list[i]){
@@ -216,7 +217,7 @@ void pending_checking(int pending_list[],struct table tabledis[],int totaltable,
 }
 
 /*To find the biggest and the second biggest size of table*/
-void finding_max(int totaltable,struct table tabledis[],int &max,int &max2){
+void finding_max(int totaltable, struct table *tabledis,int &max,int &max2){
   for(int j=0;j<totaltable;j++){
     if(tabledis[j].tsize>max){
       max2=max;
@@ -232,7 +233,7 @@ void finding_max(int totaltable,struct table tabledis[],int &max,int &max2){
 Between the table size and the number of customer in the group is the smallest.
   Also to when the table is fulled, this function will move the group of customers to a waiting list
 By connecting to the function pending() and pending_checking()*/
-void sitin(int n,int totaltable, struct table tabledis[],int pendinglist[],int max,int max2){
+void sitin(int n,int totaltable,  struct table *tabledis,int pendinglist[],int max,int max2){
   int i;
   int min=100,selected,temp,count=0,value;
   value=pendinglist[0];
@@ -323,7 +324,7 @@ int main(){
   cin>>totaltable;
   //creating dynamic array
   table* array = new table [totaltable];
-  readtable(totaltable,array);
+  array=readtable(totaltable,array);
   cout<<endl;
   //show the distribution
   cout<<setw(4)<<"No."<<setw(5)<<"Size"<<setw(7)<<"Numppl"<<setw(9)<<"Occupied"<<setw(13)<<
@@ -392,9 +393,12 @@ int main(){
       cout<<"Please input the total number of tables:";
       //input the number of table again
       cin>>totaltable;
-      table* array = new table [totaltable];
+      //clear the pending list
+      for(int j=0;j<1000;j++){
+        pendinglist[j]=0;
+      };
       //read the distribution of table
-      readtable(totaltable,array);
+      array=readtable(totaltable,array);
       cout<<endl;
       cout<<setw(4)<<"No."<<setw(5)<<"Size"<<setw(7)<<"Numppl"<<setw(9)<<"Occupied"
        <<setw(13)<<"Sit-in time"<<setw(9)<<" Meal time(min)"<<setw(10)<<"Overtime"<<endl;
@@ -402,6 +406,10 @@ int main(){
         cout<<setw(4)<<array[i].tablenum<<setw(5)<<array[i].tsize<<setw(7)<<array[i].numppl<<
          setw(9)<<array[i].occupied<<setw(13)<<array[i].otime<<setw(9)<<array[i].omin<<setw(10)<<array[i].overtime<<endl;
       }
+      cout<<"Top 10 waiting list";
+      for(int j=0;j<10;j++){
+        cout<<pendinglist[j]<<" ";
+      };
     }
     //input the number of customer moving in
     else{
@@ -418,6 +426,7 @@ int main(){
         sitin(n, totaltable,array,pendinglist,max,max2);
       }
     }
+    finding_max(totaltable,array,max,max2);
     cout<<endl;
     cout<<"Please insert the number of people: "<<"\n"<<"(People leave their table --- insert -1 then insert table number)"
      <<"\n"<<"(Exit the programm "<<setw(20)<<" --- insert 0)"<<"\n"<<"(Change the ditribution of table "<<setw(10)<<" --- insert -2)"<<endl;
